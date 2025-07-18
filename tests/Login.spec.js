@@ -40,11 +40,8 @@ test("Logout successfully", async ({page}) => {
 
   await sideBarMenu.logout();
   expect(page.url()).toBe(base_URL);
-
-
-
-
 })
+
 
 
 
