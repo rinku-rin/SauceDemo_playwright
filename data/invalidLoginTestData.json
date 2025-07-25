@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "username": "locked_out_user",
+    "password": "secret_sauce"
+  },
+  {
+    "id": 2,
+    "username": "wrong_user",
+    "password": "wrong_pass"
+  }
+
+]

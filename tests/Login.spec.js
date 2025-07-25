@@ -4,13 +4,15 @@ import { ProductsPage } from '../pages/productsPage';
 import { SideBarMenu } from '../pages/sideBarMenu';
 
 
-const loginTestData = JSON.parse(JSON.stringify(require("../data/loginTestData.json"))); 
+const validLoginTD = JSON.parse(JSON.stringify(require("../data/validLoginTestData.json"))); 
+const invalidLoginTD = JSON.parse(JSON.stringify(require("../data/invalidLoginTestData.json")));
 const base_URL = 'https://www.saucedemo.com/';
+let page;
 let loginPage;
 let productsPage;
 let sideBarMenu;
 
-test.beforeAll( async({page})=> {
+test.beforeEach( async({page})=> {
   loginPage = new LoginPage(page);
   productsPage = new ProductsPage(page);
   sideBarMenu = new SideBarMenu(page);
@@ -20,10 +22,10 @@ test('Standard Login Test', async ({page}) => {
   await page.goto(base_URL);
   await loginPage.login('standard_user', 'secret_sauce');
   expect(page.url()).toBe(productsPage.URL);
-})
+});
 
-test.describe('Data driven user login test', function() {
-  for(let data of loginTestData) {
+test.describe('DDT valid user login test', function() {
+  for (let data of validLoginTD) {
     test(`Login test for ${data.id}`, async ({ page }) => {
       await page.goto(base_URL);
       await loginPage.login(data.username, data.password);
@@ -31,6 +33,18 @@ test.describe('Data driven user login test', function() {
     })
   }
 });
+
+test.describe('DDT invalid user login test', function () {
+  for (let data of invalidLoginTD) {
+    test(`Login test for ${data.id}`, async ({ page }) => {
+      await page.goto(base_URL);
+      await loginPage.login(data.username, data.password);
+      expect(page.locator("//h3[@data-test='error']")).toBeVisible();
+    })
+  }
+});
+
+
 
 test("Logout successfully", async ({page}) => {
 
@@ -43,5 +57,9 @@ test("Logout successfully", async ({page}) => {
 })
 
 
+test.afterEach( async ({page}) => {
+  await page.waitForTimeout(3000);
+  page.close();
+})
 
 
